@@ -9,7 +9,9 @@
 #define TOO_LONG 2
 
 static int checkInput(char *in) {
-
+    if(in[0] == '"') printf("quote!");
+    for(int i=0; i<strlen(in); i++) printf("%c\n", in[i]);
+    return OK;
 }
 
 static int getLine (char *prmpt, char *buff, size_t sz) {
@@ -52,6 +54,7 @@ int main(int argc, char* argv[]){
         for(int i=1; i<argc; i++){
             char fname[BUFSIZE];
             strcpy(fname, argv[i]);
+            checkInput(fname);
             printf("%s\n", fname);
         }
     }
