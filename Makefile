@@ -1,13 +1,20 @@
+BINDIR = $(HOME)/bin
 CC=gcc
 CFLAGS=-c -Wall
 
-all: encdec
+build: .phony encdec encrypt decrypt
 
-encdec: main.c
-	$(CC) -o encdec main.c
+.phony:
+	mkdir -m 701 $(BINDIR)
 
-main.o: main.c
-	$(CC) $(CFLAGS) main.c
+encdec: main.o
+	$(CC) -o $(BINDIR)/$@ main.o
+
+encrypt: encrypt.o
+	$(CC) -o $(BINDIR)/$@ encrypt.o
+
+decrypt: decrypt.o
+	$(CC) -o $(BINDIR)/$@ decrypt.o
 
 clean:
-	@rm -f *.o encdec
+	@rm -rf *.o encdec $(BINDIR)
