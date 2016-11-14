@@ -131,12 +131,12 @@ void main(int argc, char* argv[]){
             // If there's no input, exit w/ error
             if(stat == NO_INPUT){
                 printf("Error: no input!\n");
-                return stat;
+                return;
             }
             // If input is too long, exit w/ error
             if(stat == TOO_LONG){
                 printf("Error: input too long, please limit to %d characters\n", BUFSIZE);
-                return stat;
+                return;
             }
         }
 
