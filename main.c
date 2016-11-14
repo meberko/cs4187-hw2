@@ -121,7 +121,7 @@ static int openAndExecuteFile(char *fname) {
     }
 }
 
-int main(int argc, char* argv[]){
+void main(int argc, char* argv[]){
     int stat;
     // If there's only one argument ('encdec') read input from stdin
     if(argc == 1) {
