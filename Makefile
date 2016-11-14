@@ -5,7 +5,8 @@ CFLAGS=-c -Wall
 build: .phony encdec encrypt decrypt password keyfile
 
 .phony:
-	mkdir -m 701 -p $(BINDIR)
+	@mkdir -m 701 -p $(BINDIR)
+	echo $(PATH) | grep -q $(BINDIR) && echo "~/bin in PATH" || export PATH=$(PATH):$(BINDIR)
 
 encdec: main.o
 	$(CC) -o $(BINDIR)/$@ main.o
