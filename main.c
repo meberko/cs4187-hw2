@@ -39,8 +39,10 @@ static int getLine (char *prmpt, char *buff, size_t sz) {
 static int openAndExecuteFile(char *fname) {
     // Check if file exists!
     if( access( fname, R_OK ) != -1 ) {
+        char orig_cmd[CMDSIZE];
         char cmd[CMDSIZE];
         char *cmd_tokens[3];
+        char total_cmd[CMDSIZE] = "";
         // Open the file
         FILE *file = fopen(fname, "r");
         if(file == NULL) {
@@ -50,33 +52,66 @@ static int openAndExecuteFile(char *fname) {
         // Read commands line-by-line
         while(fgets(cmd, CMDSIZE, file)) {
             int i = 0;
+            strcpy(orig_cmd, cmd);
             //system(cmd);
             // Tokenize the command; there should be 3 or less arguments
             cmd_tokens[i] = strtok(cmd, " ");
             i++;
             while((cmd_tokens[i] = strtok(NULL, " ")) != NULL) i++;
             cmd_tokens[i-1][strlen(cmd_tokens[i-1])-1] = 0;
+            // Case: cmd is cd
             if(!strcmp(cmd_tokens[0],"cd")) {
-                printf("cd!\n");
+                if(i == 2) {
+                    if(checkInput(cmd_tokens[1]) == OK) strcat(total_cmd, orig_cmd);
+                    printf("Okay cd commmand!\n");
+                }
+                else printf("Error: incorrect number of args for cd command\n");
             }
+            // Case: cmd is mkdir
             else if(!strcmp(cmd_tokens[0],"mkdir")) {
-                printf("mkdir!\n");
+                if(i == 2) {
+                    if(checkInput(cmd_tokens[1]) == OK) strcat(total_cmd, orig_cmd);
+                    printf("Okay mkdir commmand!\n");
+                }
+                else printf("Error: incorrect number of args for mkdir command\n");
             }
-            else if(!strcmp(cmd_tokens[0],"password")) {
-                printf("password!\n");
-            }
+            // Case: cmd is keyfile
             else if(!strcmp(cmd_tokens[0],"keyfile")) {
-                printf("keyfile!\n");
+                if(i == 2) {
+                    if(checkInput(cmd_tokens[1]) == OK) strcat(total_cmd, orig_cmd);
+                    printf("Okay keyfile commmand!\n");
+                }
+                else printf("Error: incorrect number of args for keyfile command\n");
             }
+            // Case: cmd is password
+            else if(!strcmp(cmd_tokens[0],"password")) {
+                if(i == 3) {
+                    if((checkInput(cmd_tokens[1]) == OK) && (checkInput(cmd_tokens[2]) == OK)) strcat(total_cmd, orig_cmd);
+                    printf("Okay password commmand!\n");
+                }
+                else printf("Error: incorrect number of args for password command\n");
+            }
+            // Case: cmd is encrypt
             else if(!strcmp(cmd_tokens[0],"encrypt")) {
-                printf("encrypt!\n");
+                if(i == 3) {
+                    if((checkInput(cmd_tokens[1]) == OK) && (checkInput(cmd_tokens[2]) == OK)) strcat(total_cmd, orig_cmd);
+                    printf("Okay encrypt commmand!\n");
+                }
+                else printf("Error: incorrect number of args for encrypt command\n");
             }
+            // Case: cmd is decrypt
             else if(!strcmp(cmd_tokens[0],"decrypt")) {
-                printf("decrypt!\n");
+                if(i == 3) {
+                    if((checkInput(cmd_tokens[1]) == OK) && (checkInput(cmd_tokens[2]) == OK)) strcat(total_cmd, orig_cmd);
+                    printf("Okay decrypt commmand!\n");
+                }
+                else printf("Error: incorrect number of args for decrypt command\n");
             }
             else printf("Error: invalid command %s\n", cmd_tokens[0]);
-            //for(int j=0; j<i; j++) printf("%s", cmd_tokens[j]);
         }
+        printf("-------------------------\nRunning: {\n%s}\n-------------------------\n", total_cmd);
+        sleep(0.1);
+        system(total_cmd);
         fclose(file);
         return 0;
     }

@@ -1,7 +1,7 @@
 cd ~
-mkdir hello
-encrypt
-decrypt
-password
-keyfile
+mkdir dir
+encrypt in out
+decrypt in out
+password pass key
+keyfile key
 shmoogledoogle
