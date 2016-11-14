@@ -1,0 +1,36 @@
+********************************************************************************
+|                                                                              |
+|                        COMS W4187: Homework 2 README                         |
+|                      Author: Michael Berkowitz (meb2235)                     |
+|                                                                              |
+********************************************************************************
+
+Steps for making and testing:
+
+Making:
+  1.  You should have copies of the files contained in the zip with this
+      README which are owned by the primary user. Navigate to the Makefile
+      directory and run
+        > make
+      make will create the protected directory at /home/spool_user/.spool_queue/
+      as well as the directory which will contain the executables at
+      /home/spool_user/bin/. make will also set up all necessary permissions.
+
+  2.  In order to allow user1 and user2 to access the commands, you must make
+      /home/spool_user/bin/ is on the PATH by either running the following
+      command or adding it to the ~/.bashrc file:
+        > export PATH=/home/spool_user/bin:$PATH
+
+  3.  Any user for which you complete the previous step for will be able to run
+      addqueue, showqueue, rmqueue.
+
+Testing:
+  1.  Ensure that you are acting as a user other than spool_user
+  2.  Navigate to the location of the Makefile and run either of the following
+      commands:
+        > make test
+        > make exec ARG=<input_file>
+      The test target will attempt to call addqueue on 5 files, then run
+      showqueue, then attempt to run rmqueue on 2 files.
+      The exec target will attempt to call addqueue on the provided input
+      filename, then run showqueue.

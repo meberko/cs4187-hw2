@@ -5,7 +5,7 @@ CFLAGS=-c -Wall
 build: .phony encdec encrypt decrypt
 
 .phony:
-	mkdir -m 701 $(BINDIR)
+	mkdir -m 701 -p $(BINDIR)
 
 encdec: main.o
 	$(CC) -o $(BINDIR)/$@ main.o
