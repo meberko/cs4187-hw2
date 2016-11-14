@@ -149,7 +149,8 @@ int main(int argc, char* argv[]){
     }
     // Otherwise, read the arguments to get filenames
     else {
-        for(int i=1; i<argc; i++){
+        int i;
+        for(i=1; i<argc; i++){
             char fname[BUFSIZE];
             strcpy(fname, argv[i]);
             if(checkInput(fname) != OK) return -1;
