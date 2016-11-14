@@ -121,7 +121,7 @@ static int openAndExecuteFile(char *fname) {
     }
 }
 
-void main(int argc, char* argv[]){
+int main(int argc, char* argv[]){
     int stat;
     // If there's only one argument ('encdec') read input from stdin
     if(argc == 1) {
@@ -131,17 +131,17 @@ void main(int argc, char* argv[]){
             // If there's no input, exit w/ error
             if(stat == NO_INPUT){
                 printf("Error: no input!\n");
-                return;
+                return stat;
             }
             // If input is too long, exit w/ error
             if(stat == TOO_LONG){
                 printf("Error: input too long, please limit to %d characters\n", BUFSIZE);
-                return;
+                return stat;
             }
         }
 
         // If we get past that, we need to check for sneaky sneaks
-        if(checkInput(fname) != OK) return;
+        if(checkInput(fname) != OK) return -1;
 
         // If we get past all of that, we have a good filename! Open it and
         // execute commands
@@ -153,7 +153,7 @@ void main(int argc, char* argv[]){
         for(i=1; i<argc; i++){
             char fname[BUFSIZE];
             strcpy(fname, argv[i]);
-            if(checkInput(fname) != OK) return;
+            if(checkInput(fname) != OK) return -1;
             openAndExecuteFile(fname);
         }
     }
