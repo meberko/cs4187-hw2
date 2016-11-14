@@ -141,7 +141,7 @@ void main(int argc, char* argv[]){
         }
 
         // If we get past that, we need to check for sneaky sneaks
-        if(checkInput(fname) != OK) return -1;
+        if(checkInput(fname) != OK) return;
 
         // If we get past all of that, we have a good filename! Open it and
         // execute commands
@@ -153,7 +153,7 @@ void main(int argc, char* argv[]){
         for(i=1; i<argc; i++){
             char fname[BUFSIZE];
             strcpy(fname, argv[i]);
-            if(checkInput(fname) != OK) return -1;
+            if(checkInput(fname) != OK) return;
             openAndExecuteFile(fname);
         }
     }
