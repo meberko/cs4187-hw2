@@ -6,24 +6,63 @@
 #define CMDSIZE 1024
 #define BUFSIZE 256
 
-#define OK       0
-#define ILLEGAL  1
-#define NOT_ABS  1
-#define NO_INPUT 1
-#define TOO_LONG 2
+#define OK          0
+#define ILLEGAL     1
+#define NOT_ABS     1
+#define NO_INPUT    1
+#define BAD_Q       2
+#define TOO_LONG    2
+#define MID_Q       3
 
 static int checkInput(char *in) {
-    //for(int i=0; i<strlen(in); i++) printf("%c\n", in[i]);
-    if(in[0] != '/') {
-        printf("Error: all filenames must be absolute paths\n");
+    int quote = 0;
+    if(in[0] == '"') {
+        if(in[strlen(in)-1] == '"') quote = 1;
+        else {
+            printf("Error: if a filename begins with a quotation mark, it must end with one;\n\tArgument <%s> is invalid\n", in);
+            return BAD_Q;
+        }
+    }
+    else if(in[0] == '\'') {
+        if(in[strlen(in)-1] == '\'') quote = 1;
+        else {
+            printf("Error: if a filename begins with a quotation mark, it must end with one;\n\tArgument <%s> is invalid\n", in);
+            return BAD_Q;
+        }
+    }
+    else if(strchr(in, '"') != NULL) {
+        int i, q=0;
+        for(i=0; i<strlen(in); i++) {
+            if(in[i] == '"') q++;
+        }
+        if(q>1){
+            printf("Error: if a filename does not begin with a quotation mark, it may not contain more than one quotation mark;\n\tArgument <%s> is invalid\n", in);
+            return MID_Q;
+        }
+    }
+    else if(strchr(in, '\'') != NULL) {
+        int i, q=0;
+        for(i=0; i<strlen(in); i++) {
+            if(in[i] == '\'') q++;
+        }
+        if(q>1){
+            printf("Error: if a filename does not begin with a quotation mark, it may not contain more than one quotation mark;\n\tArgument <%s> is invalid\n", in);
+            return MID_Q;
+        }
+    }
+    /*else if(in[0] != '/') {
+        printf("Error: all filenames must be absolute paths, %s is invalid\n", in);
         return NOT_ABS;
+    }
+    */
+    if(quote) {
+
     }
     return OK;
 }
 
 static int getLine (char *prmpt, char *buff, size_t sz) {
     int ch, extra;
-
     if (prmpt != NULL) {
         printf ("%s", prmpt);
         fflush (stdout);
@@ -126,7 +165,8 @@ int main(int argc, char* argv[]){
     if(argc == 1) {
         char fname[BUFSIZE];
         // Ask user for a file name and read it into fname
-        if((stat = (getLine("Please enter a filename or list of filenames using absolute paths:\n>", fname, BUFSIZE)))){
+        while(!(stat = (getLine("Please enter a filename using an absolute paths:\n>", fname, BUFSIZE)))){
+            printf("%s\n", fname);
             // If there's no input, exit w/ error
             if(stat == NO_INPUT){
                 printf("Error: no input!\n");
@@ -137,14 +177,9 @@ int main(int argc, char* argv[]){
                 printf("Error: input too long, please limit to %d characters\n", BUFSIZE);
                 return stat;
             }
+            // If we get past that, we need to check for sneaky sneaks
+            if(checkInput(fname) == OK) openAndExecuteFile(fname);
         }
-
-        // If we get past that, we need to check for sneaky sneaks
-        if(checkInput(fname) != OK) return -1;
-
-        // If we get past all of that, we have a good filename! Open it and
-        // execute commands
-        openAndExecuteFile(fname);
     }
     // Otherwise, read the arguments to get filenames
     else {
