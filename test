@@ -1,7 +1,7 @@
-cd ~
-mkdir dir
-encrypt in out
-decrypt in out
-password pass key
-keyfile key
+cd /home/mike
+mkdir /home/mike/dir
+password pass /home/mike/key
+keyfile /home/mike/key
+encrypt /bin/cp /home/mike/cp_enc
+decrypt /home/mike/cp_enc /home/mike/mycp
 shmoogledoogle

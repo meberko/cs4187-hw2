@@ -8,11 +8,16 @@
 
 #define OK       0
 #define ILLEGAL  1
+#define NOT_ABS  1
 #define NO_INPUT 1
 #define TOO_LONG 2
 
 static int checkInput(char *in) {
     //for(int i=0; i<strlen(in); i++) printf("%c\n", in[i]);
+    if(in[0] != '/') {
+        printf("Error: all filenames must be absolute paths\n");
+        return NOT_ABS;
+    }
     return OK;
 }
 
@@ -63,7 +68,6 @@ static int openAndExecuteFile(char *fname) {
             if(!strcmp(cmd_tokens[0],"cd")) {
                 if(i == 2) {
                     if(checkInput(cmd_tokens[1]) == OK) strcat(total_cmd, orig_cmd);
-                    printf("Okay cd commmand!\n");
                 }
                 else printf("Error: incorrect number of args for cd command\n");
             }
@@ -71,7 +75,6 @@ static int openAndExecuteFile(char *fname) {
             else if(!strcmp(cmd_tokens[0],"mkdir")) {
                 if(i == 2) {
                     if(checkInput(cmd_tokens[1]) == OK) strcat(total_cmd, orig_cmd);
-                    printf("Okay mkdir commmand!\n");
                 }
                 else printf("Error: incorrect number of args for mkdir command\n");
             }
@@ -79,15 +82,13 @@ static int openAndExecuteFile(char *fname) {
             else if(!strcmp(cmd_tokens[0],"keyfile")) {
                 if(i == 2) {
                     if(checkInput(cmd_tokens[1]) == OK) strcat(total_cmd, orig_cmd);
-                    printf("Okay keyfile commmand!\n");
                 }
                 else printf("Error: incorrect number of args for keyfile command\n");
             }
             // Case: cmd is password
             else if(!strcmp(cmd_tokens[0],"password")) {
                 if(i == 3) {
-                    if((checkInput(cmd_tokens[1]) == OK) && (checkInput(cmd_tokens[2]) == OK)) strcat(total_cmd, orig_cmd);
-                    printf("Okay password commmand!\n");
+                    if(checkInput(cmd_tokens[2]) == OK) strcat(total_cmd, orig_cmd);
                 }
                 else printf("Error: incorrect number of args for password command\n");
             }
@@ -95,7 +96,6 @@ static int openAndExecuteFile(char *fname) {
             else if(!strcmp(cmd_tokens[0],"encrypt")) {
                 if(i == 3) {
                     if((checkInput(cmd_tokens[1]) == OK) && (checkInput(cmd_tokens[2]) == OK)) strcat(total_cmd, orig_cmd);
-                    printf("Okay encrypt commmand!\n");
                 }
                 else printf("Error: incorrect number of args for encrypt command\n");
             }
@@ -103,7 +103,6 @@ static int openAndExecuteFile(char *fname) {
             else if(!strcmp(cmd_tokens[0],"decrypt")) {
                 if(i == 3) {
                     if((checkInput(cmd_tokens[1]) == OK) && (checkInput(cmd_tokens[2]) == OK)) strcat(total_cmd, orig_cmd);
-                    printf("Okay decrypt commmand!\n");
                 }
                 else printf("Error: incorrect number of args for decrypt command\n");
             }
