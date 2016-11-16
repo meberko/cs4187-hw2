@@ -57,7 +57,14 @@ Testing:
       /bin/cp --> /tmp/dir/cp_enc and then decrypts
       /tmp/dir/cp_enc --> /tmp/dir/mycp. Thus, /bin/cp should be identical to
       /tmp/dir/mycp.
-      
+
+      To test with your own arguments, you must run:
+
+        > make exec ARG=<args>
+
+      which will run:
+
+        > encdec <args>
 Output:
       encdec outputs in a specific way; there are 3 sections of output for each
       file run through encdec. First is the result of parsing the commands

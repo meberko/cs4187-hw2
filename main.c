@@ -84,8 +84,9 @@ static int openAndExecuteFile(char *fname) {
             // Case: cmd is cd
             if(!strcmp(cmd_tokens[0],"cd")) {
                 if(i == 2) {
-                    if(checkInput(cmd_tokens[1]) == OK) strcat(total_cmd, orig_cmd);
-                    if(checkInput(cmd_tokens[1]) == QUOTE) {
+                    int stat = checkInput(cmd_tokens[1]);
+                    if(stat == OK) strcat(total_cmd, orig_cmd);
+                    else if(stat == QUOTE) {
                         int j, k=0;
                         char new_cmd[CMDSIZE], new_arg[CMDSIZE];
                         strcpy(new_cmd, cmd_tokens[0]);
@@ -105,8 +106,9 @@ static int openAndExecuteFile(char *fname) {
             // Case: cmd is mkdir
             else if(!strcmp(cmd_tokens[0],"mkdir")) {
                 if(i == 2) {
-                    if(checkInput(cmd_tokens[1]) == OK) strcat(total_cmd, orig_cmd);
-                    if(checkInput(cmd_tokens[1]) == QUOTE) {
+                    int stat = checkInput(cmd_tokens[1]);
+                    if(stat == OK) strcat(total_cmd, orig_cmd);
+                    else if(stat == QUOTE) {
                         int j, k=0;
                         char new_cmd[CMDSIZE], new_arg[CMDSIZE];
                         strcpy(new_cmd, cmd_tokens[0]);
@@ -126,8 +128,9 @@ static int openAndExecuteFile(char *fname) {
             // Case: cmd is keyfile
             else if(!strcmp(cmd_tokens[0],"keyfile")) {
                 if(i == 2) {
-                    if(checkInput(cmd_tokens[1]) == OK) strcat(total_cmd, orig_cmd);
-                    if(checkInput(cmd_tokens[1]) == QUOTE) {
+                    int stat = checkInput(cmd_tokens[1]);
+                    if(stat == OK) strcat(total_cmd, orig_cmd);
+                    else if(stat == QUOTE) {
                         int j, k=0;
                         char new_cmd[CMDSIZE], new_arg[CMDSIZE];
                         strcpy(new_cmd, cmd_tokens[0]);
@@ -147,8 +150,10 @@ static int openAndExecuteFile(char *fname) {
             // Case: cmd is password
             else if(!strcmp(cmd_tokens[0],"password")) {
                 if(i == 3) {
-                    if((checkInput(cmd_tokens[1]) == OK) && (checkInput(cmd_tokens[2]) == OK)) strcat(total_cmd, orig_cmd);
-                    if(checkInput(cmd_tokens[1]) == QUOTE) {
+                    int stat1 = checkInput(cmd_tokens[1]);
+                    int stat2 = checkInput(cmd_tokens[2]);
+                    if((stat1 == OK) && (stat2 == OK)) strcat(total_cmd, orig_cmd);
+                    if(stat1 == QUOTE) {
                         int j, k=0;
                         char new_cmd[CMDSIZE], new_arg[CMDSIZE];
                         strcpy(new_cmd, cmd_tokens[0]);
@@ -162,7 +167,7 @@ static int openAndExecuteFile(char *fname) {
                         strcat(new_cmd, new_arg);
                         strcat(total_cmd, new_cmd);
                     }
-                    if(checkInput(cmd_tokens[2]) == QUOTE) {
+                    if(stat2 == QUOTE) {
                         int j, k=0;
                         char new_cmd[CMDSIZE], new_arg[CMDSIZE];
                         strcpy(new_cmd, cmd_tokens[0]);
@@ -182,8 +187,10 @@ static int openAndExecuteFile(char *fname) {
             // Case: cmd is encrypt
             else if(!strcmp(cmd_tokens[0],"encrypt")) {
                 if(i == 3) {
-                    if((checkInput(cmd_tokens[1]) == OK) && (checkInput(cmd_tokens[2]) == OK)) strcat(total_cmd, orig_cmd);
-                    if(checkInput(cmd_tokens[1]) == QUOTE) {
+                    int stat1 = checkInput(cmd_tokens[1]);
+                    int stat2 = checkInput(cmd_tokens[2]);
+                    if((stat1 == OK) && (stat2 == OK)) strcat(total_cmd, orig_cmd);
+                    if(stat1 == QUOTE) {
                         int j, k=0;
                         char new_cmd[CMDSIZE], new_arg[CMDSIZE];
                         strcpy(new_cmd, cmd_tokens[0]);
@@ -197,7 +204,7 @@ static int openAndExecuteFile(char *fname) {
                         strcat(new_cmd, new_arg);
                         strcat(total_cmd, new_cmd);
                     }
-                    if(checkInput(cmd_tokens[2]) == QUOTE) {
+                    if(stat2 == QUOTE) {
                         int j, k=0;
                         char new_cmd[CMDSIZE], new_arg[CMDSIZE];
                         strcpy(new_cmd, cmd_tokens[0]);
@@ -217,8 +224,10 @@ static int openAndExecuteFile(char *fname) {
             // Case: cmd is decrypt
             else if(!strcmp(cmd_tokens[0],"decrypt")) {
                 if(i == 3) {
-                    if((checkInput(cmd_tokens[1]) == OK) && (checkInput(cmd_tokens[2]) == OK)) strcat(total_cmd, orig_cmd);
-                    if(checkInput(cmd_tokens[1]) == QUOTE) {
+                    int stat1 = checkInput(cmd_tokens[1]);
+                    int stat2 = checkInput(cmd_tokens[2]);
+                    if((stat1 == OK) && (stat2 == OK)) strcat(total_cmd, orig_cmd);
+                    if(stat1 == QUOTE) {
                         int j, k=0;
                         char new_cmd[CMDSIZE], new_arg[CMDSIZE];
                         strcpy(new_cmd, cmd_tokens[0]);
@@ -232,7 +241,7 @@ static int openAndExecuteFile(char *fname) {
                         strcat(new_cmd, new_arg);
                         strcat(total_cmd, new_cmd);
                     }
-                    if(checkInput(cmd_tokens[2]) == QUOTE) {
+                    if(stat2 == QUOTE) {
                         int j, k=0;
                         char new_cmd[CMDSIZE], new_arg[CMDSIZE];
                         strcpy(new_cmd, cmd_tokens[0]);

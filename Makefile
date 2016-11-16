@@ -32,5 +32,13 @@ keyfile: keyfile.o
 test:
 	@./test.sh
 
+exec:
+	@echo ""
+	@echo "-------------------------------"
+	@echo "running test with custom args"
+	@echo "-------------------------------"
+	encdec $(ARG)
+	@echo ""
+
 clean:
 	@rm -rf *.o encdec $(BINDIR) ~/dir /tmp/dir*
