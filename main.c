@@ -30,7 +30,7 @@ static int checkInput(char *in) {
             return BAD_Q;
         }
     }
-    else if(strchr(in, '"') != NULL) {
+    /*else if(strchr(in, '"') != NULL) {
         int i, q=0;
         for(i=0; i<strlen(in); i++) {
             if(in[i] == '"') q++;
@@ -50,7 +50,7 @@ static int checkInput(char *in) {
             return MID_Q;
         }
     }
-    /*else if(in[0] != '/') {
+    else if(in[0] != '/') {
         printf("Error: all filenames must be absolute paths, %s is invalid\n", in);
         return NOT_ABS;
     }
@@ -127,7 +127,7 @@ static int openAndExecuteFile(char *fname) {
             // Case: cmd is password
             else if(!strcmp(cmd_tokens[0],"password")) {
                 if(i == 3) {
-                    if(checkInput(cmd_tokens[2]) == OK) strcat(total_cmd, orig_cmd);
+                    if((checkInput(cmd_tokens[1]) == OK) && (checkInput(cmd_tokens[2]) == OK)) strcat(total_cmd, orig_cmd);
                 }
                 else printf("Error: incorrect number of args for password command\n");
             }
@@ -147,7 +147,7 @@ static int openAndExecuteFile(char *fname) {
             }
             else printf("Error: invalid command %s\n", cmd_tokens[0]);
         }
-        printf("-------------------------\nRunning: {\n%s}\n-------------------------\n", total_cmd);
+        printf("-----------------------------------------------------------------\nValid Commands in %s: {\n%s}\n-----------------------------------------------------------------\n", fname, total_cmd);
         sleep(0.1);
         system(total_cmd);
         fclose(file);
@@ -161,6 +161,7 @@ static int openAndExecuteFile(char *fname) {
 
 int main(int argc, char* argv[]){
     int stat;
+    printf("-----------------------------------------------------------------\n");
     // If there's only one argument ('encdec') read input from stdin
     if(argc == 1) {
         char fname[BUFSIZE];
@@ -179,6 +180,7 @@ int main(int argc, char* argv[]){
             }
             // If we get past that, we need to check for sneaky sneaks
             if(checkInput(fname) == OK) openAndExecuteFile(fname);
+            printf("-----------------------------------------------------------------\n");
         }
     }
     // Otherwise, read the arguments to get filenames
@@ -189,7 +191,9 @@ int main(int argc, char* argv[]){
             strcpy(fname, argv[i]);
             if(checkInput(fname) != OK) return -1;
             openAndExecuteFile(fname);
+            printf("-----------------------------------------------------------------\n");
         }
     }
+    printf("-----------------------------------------------------------------\n");
     return 0;
 }

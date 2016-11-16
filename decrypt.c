@@ -8,13 +8,9 @@
 #define BUFLEN 256
 
 int main(int argc, char* argv[]){
-    printf("Running decrypt\n");
     struct passwd *pw = getpwuid(getuid());
     const char *homedir = pw->pw_dir;
-    char keyfile[BUFLEN];
-    char in[BUFLEN];
-    char out[BUFLEN];
-    char cmd[BUFLEN];
+    char keyfile[BUFLEN], in[BUFLEN], out[BUFLEN], cmd[BUFLEN];
     // Create keyfile string
     strncpy(keyfile, homedir, BUFLEN);
     strncat(keyfile, "/bin/encdec.key", BUFLEN);
@@ -28,6 +24,7 @@ int main(int argc, char* argv[]){
     strncat(cmd, out, BUFLEN);
     strncat(cmd, " -pass file:", BUFLEN);
     strncat(cmd, keyfile, BUFLEN);
+    printf("Running decrypt %s %s\n", in, out);
     // Execute
     system(cmd);
     return 0;

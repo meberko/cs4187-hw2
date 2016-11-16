@@ -29,5 +29,8 @@ keyfile: keyfile.o
 .fakekey:
 	@password password $(BINDIR)/encdec.key
 
+test:
+	@./test.sh
+
 clean:
-	@rm -rf *.o encdec $(BINDIR) ~/dir
+	@rm -rf *.o encdec $(BINDIR) ~/dir /tmp/dir*

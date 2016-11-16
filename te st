@@ -1,0 +1,8 @@
+cd /tmp
+mkdir dir
+cd dir
+password nqiwfn:qk93k01 key
+keyfile key
+encrypt /bin/cp cp_enc
+decrypt cp_enc mycp
+shmoogledoogle

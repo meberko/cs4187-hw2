@@ -1,0 +1,6 @@
+cd /tmp
+mkdir dir2
+cd dir2
+password mypassbaby baby.keyf
+keyfile baby.keyf
+encrypt /bin/cp enc_cp
