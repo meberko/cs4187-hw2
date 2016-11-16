@@ -13,6 +13,7 @@
 #define BAD_Q       2
 #define TOO_LONG    2
 #define MID_Q       3
+#define QUOTE       4
 
 static int checkInput(char *in) {
     int quote = 0;
@@ -55,9 +56,7 @@ static int checkInput(char *in) {
         return NOT_ABS;
     }
     */
-    if(quote) {
-
-    }
+    if(quote) return QUOTE;
     return OK;
 }
 

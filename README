@@ -11,10 +11,20 @@ Making:
   1.  In order to ensure that user to access the commands, you *MUST* make sure
       /home/user/bin/ is on the PATH by either running the following
       command or adding it to the ~/.bashrc file:
+
         > export PATH=/home/user/bin:$PATH
 
+      You must also ensure that openssl is installed. If you try to run the
+      command:
+
+        > openssl
+
+      from your shell and it fails, run:
+
+        > sudo apt-get install openssl
+
       *****************************************************
-      *       THIS MUST BE DONE BEFORE YOU RUN MAKE!      *
+      *   ALL OF THIS MUST BE DONE BEFORE YOU RUN MAKE!   *
       *****************************************************
 
   2.  You should have copies of the files contained in the zip with this
@@ -32,5 +42,47 @@ Making:
 Testing:
   1.  Ensure that you are acting as the user who ran make!
   2.  Navigate to the location of the Makefile and run:
+
         > make test
-      The test target will
+
+      The test target will run test.sh which runs the command:
+
+        > encdec "te st" "te st2" "te'st" "te.s\"t+=32\\"
+        > echo illegals | encdec
+        > diff -s /bin/cp /tmp/dir/mycp
+
+      Note that this tests both input through command line arguments and stdin.
+      Also note that the diff at the end SHOULD report that the two files,
+      /bin/cp and /tmp/dir/mycp, should be identical. "te st" encrypts
+      /bin/cp --> /tmp/dir/cp_enc and then decrypts
+      /tmp/dir/cp_enc --> /tmp/dir/mycp. Thus, /bin/cp should be identical to
+      /tmp/dir/mycp.
+      
+Output:
+      encdec outputs in a specific way; there are 3 sections of output for each
+      file run through encdec. First is the result of parsing the commands
+      which will display invalid commands as below as well as instances of
+      illegal input. Second is the collection of valid commands in the given
+      file. Third is the output of running the commands in the given file. As
+      we see below, this section can still report runtime errors. Here is an
+      example from running the "te st" file found in this directory:
+
+        -----------------------------------------------------------------
+        Error: invalid command shmoogledoogle
+        -----------------------------------------------------------------
+        Valid Commands in te st: {
+        cd /tmp
+        mkdir dir
+        cd dir
+        password nqiwfn:qk93k01 key
+        keyfile key
+        encrypt /bin/cp cp_enc
+        decrypt cp_enc mycp
+        }
+        -----------------------------------------------------------------
+        mkdir: cannot create directory ‘dir’: File exists
+        Running password nqiwfn:qk93k01 key
+        Running keyfile key
+        Running encrypt /bin/cp cp_enc
+        Running decrypt cp_enc mycp
+        -----------------------------------------------------------------
