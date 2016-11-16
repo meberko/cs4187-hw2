@@ -15,8 +15,10 @@
 #define MID_Q       3
 #define QUOTE       4
 
+// Static method to check input for illegal characters or patterns
 static int checkInput(char *in) {
     int quote = 0;
+    // Searches for quoted strings and marks them as such
     if(in[0] == '"') {
         if(in[strlen(in)-1] == '"') quote = 1;
         else {
@@ -31,35 +33,14 @@ static int checkInput(char *in) {
             return BAD_Q;
         }
     }
-    /*else if(strchr(in, '"') != NULL) {
-        int i, q=0;
-        for(i=0; i<strlen(in); i++) {
-            if(in[i] == '"') q++;
-        }
-        if(q>1){
-            printf("Error: if a filename does not begin with a quotation mark, it may not contain more than one quotation mark;\n\tArgument <%s> is invalid\n", in);
-            return MID_Q;
-        }
+    else if(strchr(in, ';')) {
+        printf("Error: bad char;\n\tArgument <%s> is invalid\n", in);
     }
-    else if(strchr(in, '\'') != NULL) {
-        int i, q=0;
-        for(i=0; i<strlen(in); i++) {
-            if(in[i] == '\'') q++;
-        }
-        if(q>1){
-            printf("Error: if a filename does not begin with a quotation mark, it may not contain more than one quotation mark;\n\tArgument <%s> is invalid\n", in);
-            return MID_Q;
-        }
-    }
-    else if(in[0] != '/') {
-        printf("Error: all filenames must be absolute paths, %s is invalid\n", in);
-        return NOT_ABS;
-    }
-    */
     if(quote) return QUOTE;
     return OK;
 }
 
+// Static method for getting lines from stdin
 static int getLine (char *prmpt, char *buff, size_t sz) {
     int ch, extra;
     if (prmpt != NULL) {
@@ -79,13 +60,12 @@ static int getLine (char *prmpt, char *buff, size_t sz) {
     return OK;
 }
 
+// Static method to open and execute commands in a file; also ensures commands
+// have the correct number of arguments and checks the arguments
 static int openAndExecuteFile(char *fname) {
     // Check if file exists!
     if( access( fname, R_OK ) != -1 ) {
-        char orig_cmd[CMDSIZE];
-        char cmd[CMDSIZE];
-        char *cmd_tokens[3];
-        char total_cmd[CMDSIZE] = "";
+        char orig_cmd[CMDSIZE], cmd[CMDSIZE], *cmd_tokens[3], total_cmd[CMDSIZE] = "";
         // Open the file
         FILE *file = fopen(fname, "r");
         if(file == NULL) {
@@ -96,7 +76,6 @@ static int openAndExecuteFile(char *fname) {
         while(fgets(cmd, CMDSIZE, file)) {
             int i = 0;
             strcpy(orig_cmd, cmd);
-            //system(cmd);
             // Tokenize the command; there should be 3 or less arguments
             cmd_tokens[i] = strtok(cmd, " ");
             i++;
@@ -106,6 +85,20 @@ static int openAndExecuteFile(char *fname) {
             if(!strcmp(cmd_tokens[0],"cd")) {
                 if(i == 2) {
                     if(checkInput(cmd_tokens[1]) == OK) strcat(total_cmd, orig_cmd);
+                    if(checkInput(cmd_tokens[1]) == QUOTE) {
+                        int j, k=0;
+                        char new_cmd[CMDSIZE], new_arg[CMDSIZE];
+                        strcpy(new_cmd, cmd_tokens[0]);
+                        strcat(new_cmd, " ");
+                        for(j=1; j < strlen(cmd_tokens[1])-1; j++) {
+                            if(cmd_tokens[1][j] != '\\') {
+                                new_arg[k] = cmd_tokens[1][j];
+                                k++;
+                            }
+                        }
+                        strcat(new_cmd, new_arg);
+                        strcat(total_cmd, new_cmd);
+                    }
                 }
                 else printf("Error: incorrect number of args for cd command\n");
             }
@@ -113,6 +106,20 @@ static int openAndExecuteFile(char *fname) {
             else if(!strcmp(cmd_tokens[0],"mkdir")) {
                 if(i == 2) {
                     if(checkInput(cmd_tokens[1]) == OK) strcat(total_cmd, orig_cmd);
+                    if(checkInput(cmd_tokens[1]) == QUOTE) {
+                        int j, k=0;
+                        char new_cmd[CMDSIZE], new_arg[CMDSIZE];
+                        strcpy(new_cmd, cmd_tokens[0]);
+                        strcat(new_cmd, " ");
+                        for(j=1; j < strlen(cmd_tokens[1])-1; j++) {
+                            if(cmd_tokens[1][j] != '\\') {
+                                new_arg[k] = cmd_tokens[1][j];
+                                k++;
+                            }
+                        }
+                        strcat(new_cmd, new_arg);
+                        strcat(total_cmd, new_cmd);
+                    }
                 }
                 else printf("Error: incorrect number of args for mkdir command\n");
             }
@@ -120,6 +127,20 @@ static int openAndExecuteFile(char *fname) {
             else if(!strcmp(cmd_tokens[0],"keyfile")) {
                 if(i == 2) {
                     if(checkInput(cmd_tokens[1]) == OK) strcat(total_cmd, orig_cmd);
+                    if(checkInput(cmd_tokens[1]) == QUOTE) {
+                        int j, k=0;
+                        char new_cmd[CMDSIZE], new_arg[CMDSIZE];
+                        strcpy(new_cmd, cmd_tokens[0]);
+                        strcat(new_cmd, " ");
+                        for(j=1; j < strlen(cmd_tokens[1])-1; j++) {
+                            if(cmd_tokens[1][j] != '\\') {
+                                new_arg[k] = cmd_tokens[1][j];
+                                k++;
+                            }
+                        }
+                        strcat(new_cmd, new_arg);
+                        strcat(total_cmd, new_cmd);
+                    }
                 }
                 else printf("Error: incorrect number of args for keyfile command\n");
             }
@@ -127,6 +148,34 @@ static int openAndExecuteFile(char *fname) {
             else if(!strcmp(cmd_tokens[0],"password")) {
                 if(i == 3) {
                     if((checkInput(cmd_tokens[1]) == OK) && (checkInput(cmd_tokens[2]) == OK)) strcat(total_cmd, orig_cmd);
+                    if(checkInput(cmd_tokens[1]) == QUOTE) {
+                        int j, k=0;
+                        char new_cmd[CMDSIZE], new_arg[CMDSIZE];
+                        strcpy(new_cmd, cmd_tokens[0]);
+                        strcat(new_cmd, " ");
+                        for(j=1; j < strlen(cmd_tokens[1])-1; j++) {
+                            if(cmd_tokens[1][j] != '\\') {
+                                new_arg[k] = cmd_tokens[1][j];
+                                k++;
+                            }
+                        }
+                        strcat(new_cmd, new_arg);
+                        strcat(total_cmd, new_cmd);
+                    }
+                    if(checkInput(cmd_tokens[2]) == QUOTE) {
+                        int j, k=0;
+                        char new_cmd[CMDSIZE], new_arg[CMDSIZE];
+                        strcpy(new_cmd, cmd_tokens[0]);
+                        strcat(new_cmd, " ");
+                        for(j=1; j < strlen(cmd_tokens[2])-1; j++) {
+                            if(cmd_tokens[2][j] != '\\') {
+                                new_arg[k] = cmd_tokens[2][j];
+                                k++;
+                            }
+                        }
+                        strcat(new_cmd, new_arg);
+                        strcat(total_cmd, new_cmd);
+                    }
                 }
                 else printf("Error: incorrect number of args for password command\n");
             }
@@ -134,6 +183,34 @@ static int openAndExecuteFile(char *fname) {
             else if(!strcmp(cmd_tokens[0],"encrypt")) {
                 if(i == 3) {
                     if((checkInput(cmd_tokens[1]) == OK) && (checkInput(cmd_tokens[2]) == OK)) strcat(total_cmd, orig_cmd);
+                    if(checkInput(cmd_tokens[1]) == QUOTE) {
+                        int j, k=0;
+                        char new_cmd[CMDSIZE], new_arg[CMDSIZE];
+                        strcpy(new_cmd, cmd_tokens[0]);
+                        strcat(new_cmd, " ");
+                        for(j=1; j < strlen(cmd_tokens[1])-1; j++) {
+                            if(cmd_tokens[1][j] != '\\') {
+                                new_arg[k] = cmd_tokens[1][j];
+                                k++;
+                            }
+                        }
+                        strcat(new_cmd, new_arg);
+                        strcat(total_cmd, new_cmd);
+                    }
+                    if(checkInput(cmd_tokens[2]) == QUOTE) {
+                        int j, k=0;
+                        char new_cmd[CMDSIZE], new_arg[CMDSIZE];
+                        strcpy(new_cmd, cmd_tokens[0]);
+                        strcat(new_cmd, " ");
+                        for(j=1; j < strlen(cmd_tokens[2])-1; j++) {
+                            if(cmd_tokens[2][j] != '\\') {
+                                new_arg[k] = cmd_tokens[2][j];
+                                k++;
+                            }
+                        }
+                        strcat(new_cmd, new_arg);
+                        strcat(total_cmd, new_cmd);
+                    }
                 }
                 else printf("Error: incorrect number of args for encrypt command\n");
             }
@@ -141,6 +218,34 @@ static int openAndExecuteFile(char *fname) {
             else if(!strcmp(cmd_tokens[0],"decrypt")) {
                 if(i == 3) {
                     if((checkInput(cmd_tokens[1]) == OK) && (checkInput(cmd_tokens[2]) == OK)) strcat(total_cmd, orig_cmd);
+                    if(checkInput(cmd_tokens[1]) == QUOTE) {
+                        int j, k=0;
+                        char new_cmd[CMDSIZE], new_arg[CMDSIZE];
+                        strcpy(new_cmd, cmd_tokens[0]);
+                        strcat(new_cmd, " ");
+                        for(j=1; j < strlen(cmd_tokens[1])-1; j++) {
+                            if(cmd_tokens[1][j] != '\\') {
+                                new_arg[k] = cmd_tokens[1][j];
+                                k++;
+                            }
+                        }
+                        strcat(new_cmd, new_arg);
+                        strcat(total_cmd, new_cmd);
+                    }
+                    if(checkInput(cmd_tokens[2]) == QUOTE) {
+                        int j, k=0;
+                        char new_cmd[CMDSIZE], new_arg[CMDSIZE];
+                        strcpy(new_cmd, cmd_tokens[0]);
+                        strcat(new_cmd, " ");
+                        for(j=1; j < strlen(cmd_tokens[2])-1; j++) {
+                            if(cmd_tokens[2][j] != '\\') {
+                                new_arg[k] = cmd_tokens[2][j];
+                                k++;
+                            }
+                        }
+                        strcat(new_cmd, new_arg);
+                        strcat(total_cmd, new_cmd);
+                    }
                 }
                 else printf("Error: incorrect number of args for decrypt command\n");
             }
